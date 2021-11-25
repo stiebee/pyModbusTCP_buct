@@ -16,7 +16,7 @@ WRITE_SINGLE_COIL = 0x05
 WRITE_SINGLE_REGISTER = 0x06
 WRITE_MULTIPLE_COILS = 0x0F
 WRITE_MULTIPLE_REGISTERS = 0x10
-MODBUS_ENCAPSULATED_INTERFACE = 0x2B
+MODBUS_ENCAPSULATED_INTERFACE_TRANSPORT = 0x2B
 # Modbus except code
 EXP_NONE = 0x00
 EXP_ILLEGAL_FUNCTION = 0x01
@@ -29,6 +29,7 @@ EXP_NEGATIVE_ACKNOWLEDGE = 0x07
 EXP_MEMORY_PARITY_ERROR = 0x08
 EXP_GATEWAY_PATH_UNAVAILABLE = 0x0A
 EXP_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND = 0x0B
+EXP_EXTENDED_EXCEPTION = 0xFF
 # Exception as short human readable
 EXP_TXT = {
     EXP_NONE: 'no exception',
@@ -41,7 +42,8 @@ EXP_TXT = {
     EXP_NEGATIVE_ACKNOWLEDGE: 'negative acknowledge',
     EXP_MEMORY_PARITY_ERROR: 'memory parity error',
     EXP_GATEWAY_PATH_UNAVAILABLE: 'gateway path unavailable',
-    EXP_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND: 'gateway target device failed to respond'
+    EXP_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND: 'gateway target device failed to respond',
+    EXP_EXTENDED_EXCEPTION: 'extended exception'
 }
 # Exception as details human readable
 EXP_DETAILS = {
@@ -59,7 +61,8 @@ EXP_DETAILS = {
     EXP_MEMORY_PARITY_ERROR: 'Slave detected a parity error in memory. '
                              'Master can retry the request, but service may be required on the slave device.',
     EXP_GATEWAY_PATH_UNAVAILABLE: 'Specialized for Modbus gateways, this indicates a misconfigured gateway.',
-    EXP_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND: 'Specialized for Modbus gateways, sent when slave fails to respond.'
+    EXP_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND: 'Specialized for Modbus gateways, sent when slave fails to respond.',
+    EXP_EXTENDED_EXCEPTION: 'extended exception'
 }
 # Module error codes
 MB_NO_ERR = 0

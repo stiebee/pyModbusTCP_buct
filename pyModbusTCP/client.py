@@ -771,6 +771,20 @@ class ModbusClient:
         # check regs write
         is_ok = (rx_reg_addr == regs_addr)
         return True if is_ok else None
+    
+    def encapsulated_interface_transport(self, mei_type, data_req, data_rsp):
+        """Modbus function ENCAPSULATED_INTERFACE_TRANSPORT (0x2B)
+
+        :param mei_type: MEI type
+        :param mei_type: int
+        :param data_req: byte[]
+        :param data_req: request as byte stream
+        :param data_rsp: byte[]
+        :param data_rsp: response as byte stream
+        :returns: True if success or None if fail
+        :rtype: bool or None
+        """
+        return True
 
     def _can_read(self):
         """Wait data available for socket read
