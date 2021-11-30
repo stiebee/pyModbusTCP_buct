@@ -772,19 +772,44 @@ class ModbusClient:
         is_ok = (rx_reg_addr == regs_addr)
         return True if is_ok else None
     
-    def encapsulated_interface_transport(self, mei_type, data_req, data_rsp):
+    def encapsulated_interface_transport(self, mei_type, req):
         """Modbus function ENCAPSULATED_INTERFACE_TRANSPORT (0x2B)
 
         :param mei_type: MEI type
-        :param mei_type: int
-        :param data_req: byte[]
-        :param data_req: request as byte stream
-        :param data_rsp: byte[]
-        :param data_rsp: response as byte stream
-        :returns: True if success or None if fail
-        :rtype: bool or None
+        :type mei_type: int
+        :param req: request
+        :type req: bytes
+        :returns: response if success or None if fail
+        :rtype: bytes or None
         """
-        return True
+        # check params
+        if mei_type != 13:
+            return None
+        if req is None:
+            return None
+        access_flag = req[0] & 1
+        nr_data_bytes = req[9]
+        # build frame
+        tx_buffer = self._mbus_frame(
+            const.ENCAPSULATED_INTERFACE_TRANSPORT, struct.pack('cs', mei_type, req))
+        # send request
+        s_send = self._send_mbus(tx_buffer)
+        # check error
+        if not s_send:
+            return None
+        # receive
+        f_body = self._recv_mbus()
+        # check error
+        if not f_body:
+            return None
+        # check min frame body size
+        expected_rsp_size = 11 + nr_data_bytes if (access_flag == 0) else 0
+        if len(f_body) != expected_rsp_size:
+            self.__last_error = const.MB_RECV_ERR
+            self.__debug_msg('encapsulated_interface_transport(): wrong size rx frame')
+            self.close()
+            return None
+        return f_body[1:]
 
     def _can_read(self):
         """Wait data available for socket read
