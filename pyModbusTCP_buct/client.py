@@ -790,8 +790,9 @@ class ModbusClient:
         access_flag = req[0] & 1
         nr_data_bytes = req[9]
         # build frame
+        body = struct.pack('B', mei_type) + req
         tx_buffer = self._mbus_frame(
-            const.ENCAPSULATED_INTERFACE_TRANSPORT, struct.pack('cs', mei_type, req))
+            const.ENCAPSULATED_INTERFACE_TRANSPORT, body)
         # send request
         s_send = self._send_mbus(tx_buffer)
         # check error
@@ -803,7 +804,7 @@ class ModbusClient:
         if not f_body:
             return None
         # check min frame body size
-        expected_rsp_size = 11 + nr_data_bytes if (access_flag == 0) else 0
+        expected_rsp_size = 11 + (nr_data_bytes if (access_flag == 0) else 0)
         if len(f_body) != expected_rsp_size:
             self.__last_error = const.MB_RECV_ERR
             self.__debug_msg('encapsulated_interface_transport(): wrong size rx frame')
